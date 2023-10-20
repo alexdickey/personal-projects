@@ -1,0 +1,24 @@
+Which functions you tested for Part 1
+A summary of valid inputs (inputs for which you’d expect a ‘good’ result) and expected return values
+A summary of invalid inputs (inputs for which you’d expect a ‘bad’ result) and expected return values
+Whether you’re confident you’ve verified every possible eventuality
+Whether your testing revealed any bugs that you then went back and fixed.
+
+for Part 1:
+- In its current state, each constructor should be tested for each class 
+GAME_CONTROLLER:
+    No methods that return anything, only changing global variables or displaying
+BOARD:
+    Only method that returns something is when it checks for a full board because
+        it passes this argument to the game controller
+TILE:
+    No methods that return anything, only changing global variables or displaying
+DOT:
+    No methods that return anything, only changing global variables or displaying
+
+The main bug that I have added a fix for was when a tile already contained a dot and that Tile
+was pressed. Now a print message will be displayed, but the same player will be able to place a dot
+
+Eventual bug testing will pick up with the implementation of more rules... It will involve
+trying to figure out what will "break" the code. I can see this being particularly relevant in how lists
+are navigated.

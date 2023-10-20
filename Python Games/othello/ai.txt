@@ -1,0 +1,18 @@
+1. I attempted to make my computer a competitive opponent. My AI operates by looking at 
+every legal tile on the gameboard and selecting the one that will generate the most number
+of flips. In other words, the AI will always be getting maximum flip value with each turn.
+
+2. I was able to do this, and the computer is rather challenging to defeat. I anticipate that if
+someone were to "crack the code" they could come up with a strategy to defeat the AI consitently. 
+
+3. Once the human player places a piece, the computer will place the "best" piece based on 
+number of flips. The turn will then switch back to the human player. At any point, if a player
+is unable to make a move, the player will switch. If this switch occurs for both players, 
+meaning neither player is able to spot a legal move, the game will end. 
+
+4. The computer program beat me a majority of the time, although, when I was trying to beat
+it, I was able to win a couple of times. I did have a classmate win on their first try which
+was impressive.
+
+5. I would improve the AI by finding a way to value placing a piece on the edges, and especially
+the corners. If a placement would allow the opponent to place on the corner, you want to avoid that.

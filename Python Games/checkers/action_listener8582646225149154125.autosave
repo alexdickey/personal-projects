@@ -1,0 +1,17 @@
+class ActionListener():
+
+    def __init__(self, gc):
+        self.game_controller = gc
+
+    def mouseMoved(self, row, column, mouseX, mouseY):
+        pass
+
+    def mousePressed(self, row, column, mouseX, mouseY):
+        self.game_controller.mousePressed()
+        
+
+    def mouseDragged(self):
+        pass
+
+    def mouseReleased(self):
+        pass

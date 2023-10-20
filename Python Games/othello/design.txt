@@ -1,0 +1,85 @@
+OVERALL DESIGN
+
+== APPENDIX:
+    1. INITIALIZATION
+    2. CLASSES
+        2A. FUNCTIONALITY
+        2B. METHODS
+    3. FLOW OF CONTROL
+
+                                1. INITIALIZATION
+The game is initialized containing the following:
+    () - a grid of set dimensions 4x4 or 8x8
+    () - Black and White game pieces occupying the center 4 tiles
+
+
+                                2. GAMEPLAY
+The game plays as follows:
+    After checking to determine if their is a tile that is able to be played in:
+    1.Black tile goes first, selecting a tile to "play" a game piece
+        1A. This tile must be of legal placement
+            1Aa. On the game board
+            1Ab. On a tile that is not occupied
+        1B. This tile must cause another tile to change colors
+    2.White tile follows, same rules apply
+
+                                3. RULES
+    1. Turn order is Black -> White -> Black -> White
+        - If a color is unable to perform a move, they will pass their turn
+    2. If both colors are unable to perform a move, the game will end
+        - a stalemate is reached with board positioning
+        - the board is full
+    3. Once neither player is able to continue making moves, the winner is determined by
+        who has the most pieces on board
+---------------------
+FLOW OF CONTROL
+---------------------
+*Game is initialized
+*Players alternate turns, placing a game piece each time that falls into 2 categories:
+    *ILLEGAL MOVE:
+        *Error will be returned to player if placement is illegal prompting them to attempt their move again
+    *LEGAL MOVE:
+        *Tile will display a game piece of their color
+        *All tiles of the opposing teams color that are between the newly placed tile 
+            and any existing tile of the players color will change color
+        *Turn passes to other player
+*Game ends under the following conditions that are constantly being checked for:
+    1. P1 tile + P2 tiles = entire board space
+    2. No more legal moves are able to be made by either players
+    Controller will print to screen the scores of both player and the winner is declared. 
+
+--------------------------
+PSEUDO-CODE
+--------------------------
+//===CLASSES===//
+    1. GAME_CONTROLLER
+    2. BOARD
+    3. TILE
+    4. GAME_PIECE
+    5. ~RULES
+
+1. GAME_CONTROLLER
+// The game controller class will be responsible for:
+    () - Turn order
+    () - Knowing when the game is over - matrix full, no legal moves
+    () - 
+
+2. BOARD
+    () - extends the tiles class
+    () - Height, Width, black_tiles, white_tiles
+    () - Has the tiles in a list 
+
+3. TILE
+    () - extends game_piece
+    () - able to be clicked on and draws a game piece depending on the players turn
+    () - has dimensions based on board dimensions
+    () - has "color" associated with the game_piece 
+    () -
+4. GAME_PIECE
+    () - this is just a display thing
+    () - color, dimensions
+    () - displayed on a tile when the tile is selected
+
+    
+
+

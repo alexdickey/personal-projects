@@ -1,0 +1,18 @@
+cclass checker():
+
+    def init(self):
+        self.BIG_RADIUS = null
+        self.SMALL_RADIUS = null
+        self.x_center = null
+        self.y_center = null
+        self.is_highlighted = false
+        self.is_king = false
+    
+    def display(self):
+        
+
+    def become_king(self):
+        self.is_king = true
+
+    def highlight(self):
+        self.is_highlighted = true

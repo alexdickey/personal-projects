@@ -1,0 +1,119 @@
+from board import Board
+from checker import Checker
+
+
+class GameController():
+    def __init__(self, width, height, tiles):
+        self.WIDTH = width
+        self.HEIGHT = height
+        self.tile_num = tiles
+        self.board = Board(width, height, tiles)
+        self.tile_size = (self.WIDTH // self.tile_num)
+        # self.checker_size = (self.tile_size * .8)
+        self.players_turn = 'black'
+        self.curr_checker = None
+        # self.curr_checker_index = None
+
+    def update(self):
+        self.board.display()
+
+    def setup(self):
+        self.resetCheckers()
+        self.players_turn = 'black'
+
+    def resetCheckers(self):
+        # self.board.checkers.clear()
+        for x in range(self.tile_num + 1):
+            for y in range(self.tile_num + 1):
+                if ((y < 3) and (x+y) % 2 == 1):
+                    checker = Checker(self.tile_size, 'red', (x, y))
+                    self.board.checkers.append(checker)
+                elif ((y > 4) and (x+y) % 2 == 1):
+                    checker = Checker(self.tile_size, 'black', (x, y))
+                    self.board.checkers.append(checker)
+
+    def mousePressed(self, row, column, mouseX, mouseY):
+        """Responsible for picking up a checker piece"""
+
+        print("pressed")
+        selected = Checker(self.tile_size, self.players_turn, [row, column])
+        if (self.board.checkers.__contains__(selected)):
+            index = self.board.checkers.index(selected)
+            print(self.board.checkers[index].pos)
+            # print(index)
+            self.curr_checker = index
+        else:
+            print("checker not found")
+
+    def mouseReleased(self, row, column, mouseX, mouseY):
+        print("released")
+        if (self.curr_checker):
+            orig_x = self.board.checkers[self.curr_checker].pos[0]
+            orig_y = self.board.checkers[self.curr_checker].pos[1]
+            
+            if (self.isValidMove((row, column))):
+                self.makeMove((row, column))
+            else:
+                self.board.checkers[self.curr_checker].update_position(orig_x, orig_y)
+            # self.board.checkers.remove(self.board.checkers[self.curr_checker])
+        self.curr_checker = None
+
+    def mouseDragged(self, row, column, mouseX, mouseY):
+        if (self.curr_checker is not None):
+            self.board.checkers[self.curr_checker].center = (mouseX, mouseY)
+    
+    def mouseMoved(self, row, column):
+        for checker in self.board.checkers:
+            if ((row, column) == checker.pos):
+                checker.is_highlighted = True
+            else:
+                checker.is_highlighted = False
+
+    def isValidMove(self, loc):
+        # This method will take a checker and a location.
+        #         It will determine if the move is valid.
+
+        left_up, right_up = [-1, -1], [1, -1]  # black movement
+        left_dn, right_dn = [-1, 1], [1, 1]    # red movement
+        checker = self.board.checkers[self.curr_checker]
+        cur_pos = checker.pos                  # tuple of current checker (x,y)
+
+        if (self.inBounds(loc)):
+            if (self.isEmpty(loc)):
+                if (checker.is_king):
+                    if ((cur_pos + left_up) == loc or
+                            (cur_pos + right_up) == loc or
+                            (cur_pos + left_dn) == loc or
+                            (cur_pos + right_dn) == loc):
+                        return true
+                elif (checker.color == 'red'):
+                    if (((cur_pos[0] + left_dn[0] == loc[0]) and
+                            (cur_pos[1] + left_dn[1] == loc[1])) or
+                            ((cur_pos[0] + right_dn[0] == loc[0]) and
+                             (cur_pos[1] + right_dn[1] == loc[1]))):
+                        return True
+                elif (checker.color == 'black'):
+                    if (((cur_pos[0] + left_up[0] == loc[0]) and
+                            (cur_pos[1] + left_up[1] == loc[1])) or
+                            ((cur_pos[0] + right_up[0] == loc[0]) and
+                             (cur_pos[1] + right_up[1] == loc[1]))):
+                        return True
+        return False
+
+    def inBounds(self, loc):
+        return True
+
+    def isEmpty(self, loc):
+        for checker in self.board.checkers:
+            if checker.pos == loc:
+                return False
+        return True
+
+    def makeMove(self, loc):
+        self.board.checkers[self.curr_checker].update_position(loc[0], loc[1])
+    
+    def isValidJump(self, loc):
+        pass
+    
+    def makeJump(self, loc):
+        pass

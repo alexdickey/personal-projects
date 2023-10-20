@@ -1,0 +1,254 @@
+Hello! I am hoping to jump back into this by designing a playable game of checkers with a 
+toggleable AI
+
+ ---- CHECKERS ----
+ Table of Contents:
+    I. Components
+    II. Flow
+    III. Functionality
+--------------------
+==================================================================================
+
+I. Components
+    This game of checkers is made of three main components. 
+        1. InputReader - responsible for user input
+        2. GameController - responsible for managing logic and rules
+        3. Board - responsible for display
+        
+==================================================================================
+
+II. Flow
+    i. Upon initilization, the Board will be displayed in its default state.
+    ii. The GameController will recognize that the game is not over and will wait for input
+        from the player. 
+    iii. The InputReader will wait for and recognize user input in the form
+        of mouse commands: movement, pressing, dragging, and releasing.
+    iv. Depending on the different cases that each of these commands encapsulated, the
+        GameController is responsible for carrying out the specific logic and updating the 
+        state of the game so that the board appropriately displays what is happening. 
+    v. The game will continue to happen, until it is either one or results in a tie.
+==================================================================================
+
+III. Functionality
+==================================================================================
+    InputReader: 
+        mouseMoved:
+            Keeps track of the X,Y position of the mouse as it moves.
+        mousePressed:
+            Knows where the mouse was pressed on the board (X,Y) // (Row, Column)
+        mouseDragged:
+            After mousePressed, keeps track of mouse movement until mouseReleased 
+        mouseReleased:
+            Knows the X,Y of where the mouse was released
+==================================================================================
+==================================================================================
+
+    Board(TILE_NUM, TILE_SIZE):
+        this.width = TILE_NUM * TILE_SIZE
+        this.height = TILE_NUM * TILE_SIZE
+        this.tile_num = TILE_NUM
+        this.tile_size = TILE_SIZE
+        this.checker_size = TILE_SIZE * .8
+        this.checkers = set()
+        this.red_checkers = []
+        this.black_checkers []
+
+        display():
+            displayBoard()
+            displayCheckers()
+
+        displayBoard()
+            background('tan')
+            for x in range(tile_num):
+                x_coord = x * self.tile_size
+                for y in range(tile_num):
+                    y_coord = y * self.tile_size
+                    if ((x+y) % 2 == 1):
+                        fill('brown')
+                        stroke(2)
+                        square(x_coord, y_coord, self.tile_size)
+                    else:
+                        noFill()
+                        stroke(2)
+                        square(x_coord, y_coord, self.tile_size)
+
+-- maybe this is logic for the gamecontroller -- 
+        def init_checkers():
+            for x in range(tile_num):
+                    x_coord = (x * self.tile_size) + (self.tile_size / 2)
+                    for y in range(tile_num):
+                        y_coord = (y * self.tile_size) + (self.tile_size / 2)
+                        if (y < 3 && x+y & 2 == 0):
+                            checkers.add(Checker(self.checker_size, 'red', (x_coord, y_coord)))
+                        elif (y > 5 && x+y & 2 == 0):
+                            checkers.add(Checker(self.checker_size, 'black', (x_coord, y_coord)))
+
+
+
+
+        displayCheckers():
+            for checker in checkers:
+                checker.display()
+
+    Tile(TILE_SIZE, x, y, color):
+        this.size = TILE_SIZE
+        this.corner = (x, y)
+        this.center = (x, y)
+        this.color = color  # 'tan' or 'brown'
+
+        display(self):
+            fill(self.color)
+            square(this.corner[0], this.corner[1], this.size)
+
+
+    Checkers(size, color, pos):
+        self.color = 'red' // 'black'
+        self.size = INPUT_FROM_BOARD
+        self.king = False
+        self.highlighted = False
+        self.pos = (x,y)
+    
+        display:
+            displayOuter()
+            displayInner()
+
+Q's: 
+    .. I need to figure out how I want to handle the (x, y) loc of a checker piece.
+            They are being displayed at their mouseLocations (150, 150) for example
+            But in all of the jump logic, their pos is relative to their coord location (2, 2) for example
+        coord location works untilllll I need to drag and drop or something
+        display would have to be at their pos but then multiplied by tile length or something... that might fix it  
+==================================================================================
+==================================================================================
+
+    
+    GameController:
+        self.players_turn = 'red' // 'black'
+
+        Functionality with InputReader:
+            mouseMoved:
+                While the mouse is being moved, it will visually highlight any of the current players
+                pieces that are able to make a legal move, highlighting the squares that they are able to 
+                be moved to
+
+                for checker in board.checkers:
+                    if (mouseX == checker.pos[0] &&
+                        mouseY == checker.pos[1]):
+                           checker.is_highlighted = True
+                    else:
+                        checker.is_highlighted = False
+
+            mousePressed:
+                When the mouse is pressed, there are number of cases that can happen:
+                1. The mousePress is on a piece of the user
+                    i. The piece is able to be moved (i.e it is being highlighted):
+                        Upon pressing, the piece is "picked-up"
+                    ii. The piece is unable to be moved, or there is a piece that must be moved
+                        Nothing should result from this
+                2. The mousePress is on an opponents piece
+                    i. Nothing should result from this
+                3. The mousePress is on the board
+                    i. Nothing should result from this
+                
+                row = (mouseY) / (WIDTH // TILES)
+                column = (mouseX) / (WIDTH // TILES)
+                selected = board.checkers.get(Checker.pos([row, column]))
+                orig_pos = row, column
+                checker.pos = (mouseX, mouseY)
+
+            mouseDragged:
+                Only relevant after the mouse has been pressed.
+                Only relevant after the mousePressed has "picked up" a piece
+                In this event, a piece of the appropriate color should be displayed as the
+                    mouse is being dragged.
+            mouseReleased:
+                If mousePressed "picked up" a piece
+                mouse released will then determine the location of the released mouse is a valid move the 
+                picked up piece and will place the piece at that location
+
+            def setup(self):
+                self.resetCheckers()
+                self.players_turn = 'black'
+
+            
+            def resetCheckers(self):
+                for x in length(tile_num):
+                    for y in length(tile_num):
+                        if (y < 3 x+y & 2 == 0):
+                                checker = Checker(self.checker_size, 'red', (x, y))
+                                board.checkers.add(checker)
+                            elif (y > 5):
+                                checker = Checker(self.checker_size, 'black', (x, y))
+                                board.checkers.add(checker)
+
+            
+            valid_move(checker, loc)
+                This method will take a checker and a location.
+                It will determine if the move is valid.
+                    
+                    left-up, right-up = [-1, -1], [1, -1]  # black movement
+                    left-dn, right-dn = [-1, 1], [1, 1]    # red movement
+                    cur_pos = checker.pos                  # tuple of current checker (x,y)
+                    
+                    if (inBounds(loc)):
+                        if (empty(loc)):
+                            if (checker.is_king):
+                                if ( (cur_pos + left_up) == loc ||
+                                     (cur_pos + right_up) == loc ||
+                                     (cur_pos + left_dn) == loc ||
+                                     (cur_pos + right_dn) == loc):
+                                     return true 
+                            elif (checker.color = 'red'):
+                                if ( (cur_pos + left_dn) == loc ||
+                                     (cur_pos + right_dn) == loc):
+                                     return true
+                            elif (checker.color = 'black'):
+                                if ( (cur_pos + left_up) == loc ||
+                                     (cur_pos + right_up) == loc):
+                                     return true
+                    return false
+            
+            move(checker, loc)
+                This method will take a checker and a location. 
+                It will redraw that checker at the new location.
+
+                checker.pos = loc
+            
+            def updateMoves(self):
+                for checker in board.checkers():
+                    if (checker.color == self.players_turn):
+                        directions = validDirections(checker)
+                        for move in directions:
+                            if (valid_move(checker, move)):
+                                valid_moves.add(checker)
+                                return // either make this a set or find a way to prevent from adding twice
+                                        // also need to consider how we might clear it between players turns
+
+            def isValidJump(checker, loc):
+                if inBounds(loc):
+                    # check if the loc is a pos of any checkers
+                    for c in board.checkers:
+                        if (c.pos == loc):
+                            return false
+                    directions = validDirections(checker)
+                    for move in directions:
+                        if (checker.pos[0] + move[0] + move[0] &&
+                            checker.pos[1] + move[1] + move[1] == 
+                            loc):
+                            for c in board.checkers:
+                                if (checker.pos[0] + move[0] == c.pos[0] &&
+                                    checker.pos[1] + move[1] == c.pos[1] &&
+                                    checker.color != c.color):
+                                    return true
+
+            def jump(checker, loc)
+                self.move(checker, loc)
+                self.board.checkers.remove(jumped_checker)
+
+
+            inBounds(loc)
+                Checks to see if the location argument is within the confines of the board
+            empty(loc)
+                Check to see if the location argument matches the position of any of the checkers
+
+==================================================================================
